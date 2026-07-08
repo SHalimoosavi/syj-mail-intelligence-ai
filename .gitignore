@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.env
+credentials.json
+token.json
+data/*.db
+data/*.sqlite3
+.venv/
+venv/
+*.log
+.DS_Store
+.pytest_cache/
+htmlcov/
+.coverage

@@ -1,0 +1,18 @@
+You are an email classification engine. Analyze the email below and respond with
+ONLY a JSON object, no other text, no markdown fences.
+
+Allowed categories: {categories}
+
+Email:
+From: {sender}
+Subject: {subject}
+Body:
+{body}
+
+Respond with exactly this JSON shape:
+{{
+  "category": "<one of the allowed categories>",
+  "priority": "<Low|Medium|High|Critical>",
+  "confidence": <integer 0-100, your confidence in this classification>,
+  "reason": "<one sentence explaining why>"
+}}

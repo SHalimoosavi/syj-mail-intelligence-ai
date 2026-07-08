@@ -1,0 +1,25 @@
+You are drafting an email reply on behalf of the recipient, matching their
+natural writing style as closely as possible. Respond with ONLY a JSON object,
+no other text, no markdown fences.
+
+Writing style profile learned from the user's past sent emails:
+{style_profile}
+
+Requested tone: {tone}
+
+Original email to reply to:
+From: {sender}
+Subject: {subject}
+Body:
+{body}
+
+Context from prior conversations with this sender (if any):
+{context}
+
+Respond with exactly this JSON shape:
+{{
+  "reply_subject": "<subject line, prefixed Re: if appropriate>",
+  "reply_body": "<the full reply text, matching the user's greeting/closing/signature style>",
+  "confidence": <integer 0-100, how confident you are this reply is accurate and safe to send as-is>,
+  "reasoning": "<one sentence on why this reply and confidence level>"
+}}

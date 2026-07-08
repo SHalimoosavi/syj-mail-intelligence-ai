@@ -1,0 +1,26 @@
+[Unit]
+Description=SYJ Mail Intelligence AI - backend (poller + API)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=syjmail
+Group=syjmail
+WorkingDirectory=/opt/syj-mail-intelligence-ai
+EnvironmentFile=/opt/syj-mail-intelligence-ai/.env
+ExecStart=/opt/syj-mail-intelligence-ai/.venv/bin/python main.py
+Restart=on-failure
+RestartSec=5
+# Auto-restart forever, but back off if it's crash-looping
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+# Hardening — the service only needs its own directory and outbound network
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/syj-mail-intelligence-ai/data
+
+[Install]
+WantedBy=multi-user.target

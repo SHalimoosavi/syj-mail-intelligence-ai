@@ -1,0 +1,21 @@
+[Unit]
+Description=SYJ Mail Intelligence AI - dashboard (Next.js)
+After=network-online.target syj-mail-backend.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=syjmail
+Group=syjmail
+WorkingDirectory=/opt/syj-mail-intelligence-ai/dashboard
+EnvironmentFile=/opt/syj-mail-intelligence-ai/dashboard/.env.local
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target

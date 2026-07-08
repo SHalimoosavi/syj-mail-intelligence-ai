@@ -1,0 +1,18 @@
+Summarize the email below. Respond with ONLY a JSON object, no other text, no
+markdown fences.
+
+Email:
+From: {sender}
+Subject: {subject}
+Body:
+{body}
+
+Respond with exactly this JSON shape:
+{{
+  "one_line_summary": "<max 15 words>",
+  "short_summary": "<2-3 sentences>",
+  "detailed_summary": "<full paragraph covering all key points>",
+  "action_items": ["<action 1>", "<action 2>"],
+  "deadlines": ["<deadline text if any>"],
+  "requested_tasks": ["<task the sender is asking for>"]
+}}

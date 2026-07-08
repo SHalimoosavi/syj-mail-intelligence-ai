@@ -1,0 +1,9 @@
+[Unit]
+Description=Prune old SYJ Mail Intelligence log entries (weekly)
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

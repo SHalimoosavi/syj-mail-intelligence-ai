@@ -1,0 +1,10 @@
+[Unit]
+Description=Prune old SYJ Mail Intelligence log entries
+
+[Service]
+Type=oneshot
+User=syjmail
+Group=syjmail
+WorkingDirectory=/opt/syj-mail-intelligence-ai
+EnvironmentFile=/opt/syj-mail-intelligence-ai/.env
+ExecStart=/opt/syj-mail-intelligence-ai/.venv/bin/python -m scripts.prune_logs --days 30
