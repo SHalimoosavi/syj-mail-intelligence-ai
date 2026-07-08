@@ -281,8 +281,6 @@ I also maintain an active interest in OSINT and open-source security tooling —
 
 Full, up-to-date list: [github.com/SHalimoosavi?tab=repositories](https://github.com/SHalimoosavi?tab=repositories)
 
-*Note: I wasn't able to pull the live repository list directly (GitHub blocks automated fetches of profile pages), so the table above reflects the projects known from our prior conversations. Worth double-checking the profile link for anything newer I haven't been told about yet.*
-
 ---
 
 ## 📄 License
