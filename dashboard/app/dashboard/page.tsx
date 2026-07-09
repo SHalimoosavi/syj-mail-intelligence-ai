@@ -29,7 +29,7 @@ type DashboardState = {
   analytics: AnalyticsSummary | null;
   ready: ReadyStatus | null;
   settings: SettingsView | null;
- important: EmailSummary[];
+  important: EmailSummary[];
   drafts: Draft[];
 };
 
@@ -63,8 +63,8 @@ function priorityColor(priority: string) {
 
 function statusColor(ok: boolean) {
   return ok
-    ? "text-success border-success/30 bg-success/10"
-    : "text-danger border-danger/30 bg-danger/10";
+    ? "border-success/30 bg-success/10 text-success"
+    : "border-danger/30 bg-danger/10 text-danger";
 }
 
 function SectionTitle({
@@ -95,7 +95,7 @@ function LoadingScreen() {
       <div className="flex items-center gap-3 rounded-lg border border-border bg-surface px-6 py-5 shadow-panel">
         <Loader2 className="h-5 w-5 animate-spin text-signal-mid" />
         <span className="text-sm text-text">
-          Loading executive dashboard...
+          Loading Executive Dashboard...
         </span>
       </div>
     </div>
@@ -111,26 +111,28 @@ function ErrorScreen({
 }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-base p-6">
-      <div className="max-w-lg rounded-lg border border-danger/30 bg-surface p-8">
+      <div className="max-w-xl rounded-lg border border-danger/30 bg-surface p-8 shadow-panel">
+
         <div className="flex items-center gap-3">
           <AlertTriangle className="h-6 w-6 text-danger" />
 
-          <h2 className="font-display text-lg font-semibold text-text">
-            Dashboard unavailable
+          <h2 className="font-display text-xl font-semibold text-text">
+            Dashboard Unavailable
           </h2>
         </div>
 
-        <p className="mt-4 text-sm leading-6 text-muted">
+        <p className="mt-4 text-sm leading-7 text-muted">
           {message}
         </p>
 
         <button
           onClick={retry}
-          className="mt-6 inline-flex items-center gap-2 rounded-md border border-border bg-surface2 px-4 py-2 text-sm text-text transition hover:bg-border"
+          className="mt-6 inline-flex items-center gap-2 rounded-md border border-border bg-surface2 px-4 py-2 text-sm transition hover:bg-border"
         >
           <RefreshCw className="h-4 w-4" />
           Retry
         </button>
+
       </div>
     </div>
   );
@@ -147,17 +149,21 @@ function MetricCard({
 }) {
   return (
     <div className="rounded-lg border border-border bg-surface p-5 shadow-panel">
+
       <div className="flex items-center justify-between">
+
         <span className="text-sm text-muted">
           {title}
         </span>
 
         {icon}
+
       </div>
 
       <div className="mt-4 font-display text-3xl font-bold text-text">
         {value}
       </div>
+
     </div>
   );
 }
@@ -172,10 +178,10 @@ function HealthCard({
   value: string;
 }) {
   return (
-    <div
-      className={`rounded-lg border p-4 ${statusColor(ok)}`}
-    >
+    <div className={`rounded-lg border p-4 ${statusColor(ok)}`}>
+
       <div className="flex items-center justify-between">
+
         <span className="text-sm font-medium">
           {title}
         </span>
@@ -185,16 +191,19 @@ function HealthCard({
         ) : (
           <AlertTriangle className="h-5 w-5" />
         )}
+
       </div>
 
-      <div className="mt-3 text-xs break-all opacity-90">
+      <div className="mt-3 break-all text-xs opacity-90">
         {value}
       </div>
+
     </div>
   );
 }
 
 export default function DashboardPage() {
+
   const [state, setState] = useState<DashboardState>({
     analytics: null,
     ready: null,
@@ -233,12 +242,15 @@ export default function DashboardPage() {
         important,
         drafts,
       });
+
     } catch (err) {
+
       setError(
         err instanceof Error
           ? err.message
           : "Unable to load dashboard."
       );
+
     } finally {
       setLoading(false);
     }
@@ -252,7 +264,12 @@ export default function DashboardPage() {
     return <LoadingScreen />;
   }
 
-  if (error || !state.analytics || !state.ready || !state.settings) {
+  if (
+    error ||
+    !state.analytics ||
+    !state.ready ||
+    !state.settings
+  ) {
     return (
       <ErrorScreen
         message={error ?? "Unknown error."}
@@ -270,32 +287,41 @@ export default function DashboardPage() {
   } = state;
 
   return (
+
     <div className="min-h-screen bg-base">
+
       <div className="border-b border-border bg-surface">
+
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+
           <div>
+
             <h1 className="font-display text-3xl font-bold text-text">
               Executive Dashboard
             </h1>
 
             <p className="mt-2 text-sm text-muted">
-              Real-time operational overview of SYJ Mail Intelligence AI.
+              Operational overview of the SYJ Mail Intelligence AI platform.
             </p>
+
           </div>
 
           <button
             onClick={loadDashboard}
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface2 px-4 py-2 text-sm text-text transition hover:bg-border"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface2 px-4 py-2 text-sm transition hover:bg-border"
           >
             <RefreshCw className="h-4 w-4" />
             Refresh
           </button>
+
         </div>
+
       </div>
 
       <div className="mx-auto max-w-7xl space-y-10 px-6 py-8">
 
         <section>
+
           <SectionTitle
             title="Key Performance Indicators"
             subtitle="High-level operational metrics."
@@ -328,6 +354,7 @@ export default function DashboardPage() {
             />
 
           </div>
+
         </section>
 
         <section>
@@ -372,6 +399,7 @@ export default function DashboardPage() {
             />
 
           </div>
+
         </section>
 
         <section>
@@ -395,10 +423,12 @@ export default function DashboardPage() {
 
                 {Object.entries(analytics.by_category).map(
                   ([category, count]) => (
+
                     <div
                       key={category}
                       className="rounded-md border border-border bg-base p-4"
                     >
+
                       <div className="flex items-center justify-between">
 
                         <div className="font-medium text-text">
@@ -414,6 +444,7 @@ export default function DashboardPage() {
                       </div>
 
                     </div>
+
                   )
                 )}
 
@@ -543,6 +574,10 @@ export default function DashboardPage() {
                           Confidence: {draft.confidence}%
                         </div>
 
+                        <div className="mt-2 inline-flex rounded border border-border px-2 py-1 text-[11px] uppercase tracking-wide text-muted">
+                          {draft.status}
+                        </div>
+
                       </div>
 
                       <Sparkles className="h-5 w-5 text-signal-mid" />
@@ -640,21 +675,21 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted">Auto Send</dt>
+                  <dt className="text-muted">Auto Send Threshold</dt>
                   <dd className="font-mono text-text">
                     {settings.auto_send_threshold}%
                   </dd>
                 </div>
 
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted">Approval</dt>
+                  <dt className="text-muted">Approval Threshold</dt>
                   <dd className="font-mono text-text">
                     {settings.approval_threshold}%
                   </dd>
                 </div>
 
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted">Notify</dt>
+                  <dt className="text-muted">Notify Threshold</dt>
                   <dd className="font-mono text-text">
                     {settings.importance_notify_threshold}%
                   </dd>
@@ -687,7 +722,7 @@ export default function DashboardPage() {
 
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted">Ollama Host</dt>
-                  <dd className="font-mono text-text break-all">
+                  <dd className="font-mono break-all text-text">
                     {settings.ollama_host}
                   </dd>
                 </div>
@@ -723,7 +758,7 @@ export default function DashboardPage() {
 
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted">Last Gmail Sync</dt>
-                  <dd className="font-mono text-text text-right">
+                  <dd className="font-mono text-right text-text">
                     {settings.gmail.last_success_at
                       ? formatDate(settings.gmail.last_success_at)
                       : "Never"}
@@ -741,5 +776,6 @@ export default function DashboardPage() {
       </div>
 
     </div>
+
   );
 }

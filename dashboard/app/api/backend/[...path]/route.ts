@@ -1,54 +1,180 @@
-/**
- * Every dashboard request goes through here, never directly from the
- * browser to FastAPI. This keeps BACKEND_API_KEY server-side only — it's
- * read from process.env here (no NEXT_PUBLIC_ prefix), so it's never bundled
- * into client JS or visible in browser dev tools.
- */
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8000";
-const BACKEND_KEY = process.env.BACKEND_API_KEY || "";
+const BACKEND_URL =
+  process.env.BACKEND_API_URL ?? "http://localhost:8000";
 
-async function proxy(req: NextRequest, path: string[]) {
-  const targetPath = "/" + path.join("/");
-  const search = req.nextUrl.search;
-  const url = `${BACKEND_URL}${targetPath}${search}`;
+const BACKEND_API_KEY =
+  process.env.BACKEND_API_KEY ?? "";
+
+function buildBackendUrl(
+  request: NextRequest,
+  path: string[],
+) {
+  const url = new URL(
+    "/" + path.join("/"),
+    BACKEND_URL.endsWith("/")
+      ? BACKEND_URL
+      : `${BACKEND_URL}/`,
+  );
+
+  request.nextUrl.searchParams.forEach((value, key) => {
+    url.searchParams.append(key, value);
+  });
+
+  return url;
+}
+
+async function proxyRequest(
+  request: NextRequest,
+  path: string[],
+) {
+  const url = buildBackendUrl(request, path);
+
+  const headers = new Headers();
+
+  headers.set(
+    "Accept",
+    request.headers.get("accept") ?? "application/json",
+  );
+
+  const contentType =
+    request.headers.get("content-type");
+
+  if (contentType) {
+    headers.set("Content-Type", contentType);
+  }
+
+  if (BACKEND_API_KEY) {
+    headers.set("X-API-Key", BACKEND_API_KEY);
+  }
 
   const init: RequestInit = {
-    method: req.method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(BACKEND_KEY ? { "X-API-Key": BACKEND_KEY } : {}),
-    },
+    method: request.method,
+    headers,
     cache: "no-store",
+    redirect: "manual",
   };
 
-  if (req.method === "POST" || req.method === "PUT") {
-    const body = await req.text();
-    if (body) init.body = body;
+  if (
+    request.method !== "GET" &&
+    request.method !== "HEAD"
+  ) {
+    init.body = await request.text();
   }
 
   try {
-    const res = await fetch(url, init);
-    const text = await res.text();
-    return new NextResponse(text, {
-      status: res.status,
-      headers: { "Content-Type": res.headers.get("Content-Type") || "application/json" },
+    const response = await fetch(url, init);
+
+    const responseHeaders = new Headers();
+
+    response.headers.forEach((value, key) => {
+      if (
+        key.toLowerCase() === "content-length" ||
+        key.toLowerCase() === "content-encoding"
+      ) {
+        return;
+      }
+
+      responseHeaders.set(key, value);
     });
-  } catch (err) {
-    return NextResponse.json(
-      { error: `Cannot reach backend at ${BACKEND_URL}. Is uvicorn running?` },
-      { status: 502 }
+
+    return new NextResponse(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: responseHeaders,
+    });
+
+  } catch (error) {
+
+    console.error(
+      "[Backend Proxy]",
+      error,
     );
+
+    return NextResponse.json(
+      {
+        error: "Backend unavailable",
+        message:
+          "Unable to connect to the FastAPI backend.",
+        backend: BACKEND_URL,
+      },
+      {
+        status: 502,
+      },
+    );
+
   }
 }
 
-export async function GET(req: NextRequest, { params }: { params: { path: string[] } }) {
-  return proxy(req, params.path);
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+) {
+  return proxyRequest(request, params.path);
 }
-export async function POST(req: NextRequest, { params }: { params: { path: string[] } }) {
-  return proxy(req, params.path);
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+) {
+  return proxyRequest(request, params.path);
 }
-export async function PUT(req: NextRequest, { params }: { params: { path: string[] } }) {
-  return proxy(req, params.path);
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+) {
+  return proxyRequest(request, params.path);
 }
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+) {
+  return proxyRequest(request, params.path);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+) {
+  return proxyRequest(request, params.path);
+}
+
+export async function HEAD(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+) {
+  return proxyRequest(request, params.path);
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      Allow: "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS",
+    },
+  });
+}
+
+/**
+ * Use the Node.js runtime because this proxy forwards arbitrary HTTP
+ * requests and streams backend responses. This also keeps behavior
+ * consistent between local development, Railway and Vercel.
+ */
+export const runtime = "nodejs";
+
+/**
+ * Always execute dynamically so no API responses are cached by Next.js.
+ */
+export const dynamic = "force-dynamic";
+
+/**
+ * Maximum execution time (seconds).
+ */
+export const maxDuration = 60;
+
+/**
+ * Ensure every request reaches the backend instead of serving cached data.
+ */
+export const fetchCache = "force-no-store";
