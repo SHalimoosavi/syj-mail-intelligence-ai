@@ -30,13 +30,19 @@ class OllamaProvider(LLMProvider):
         target_model = model or settings.llm_model
         try:
             return await self._call(target_model, prompt)
+
         except Exception as exc:
+            import traceback
+
             log_event(
                 "ollama_provider",
-                f"Primary model '{target_model}' failed ({exc}); trying fallback "
-                f"'{settings.llm_fallback_model}'",
+                f"Primary model '{target_model}' failed.\n"
+                f"Exception type: {type(exc).__name__}\n"
+                f"Exception repr: {repr(exc)}\n"
+                f"Traceback:\n{traceback.format_exc()}\n"
+                f"Trying fallback '{settings.llm_fallback_model}'",
                 level="warning",
-            )
+           )
             return await self._call(settings.llm_fallback_model, prompt)
 
     async def _call(self, model: str, prompt: str) -> dict:
