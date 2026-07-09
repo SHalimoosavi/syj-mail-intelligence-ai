@@ -1,6 +1,6 @@
 <div align="center">
 
-# SYJ Mail Intelligence AI
+<img src="./assets/header-typing.svg" alt="SYJ Mail Intelligence AI" width="900"/>
 
 **Local-first AI email intelligence** — classification, prioritization, summarization, and reply generation, running entirely on infrastructure you control.
 
@@ -42,6 +42,12 @@ Built by [Syed Ali Hasan Moosavi](#author) — [Sayanjali Nexus](#about-sayanjal
 Most "AI inbox" tools route email through a third-party cloud model. This doesn't. Classification, importance scoring, summarization, and reply drafting all run locally through Ollama — the content of your email never leaves your own infrastructure. On top of that local reasoning pipeline sits a REST API and a dashboard: Gmail in, structured intelligence and drafted replies out, gated by a deterministic approval workflow that decides what gets auto-sent, drafted for review, or escalated to a human.
 
 The backend and dashboard run the same way on a Windows machine, a Linux server, a Mac, or an Android phone in Termux — the AI layer is model-and-runtime driven, not tied to any one OS.
+
+<div align="center">
+
+<img src="./assets/stat-cards.svg" alt="Project stats" width="880"/>
+
+</div>
 
 ---
 
@@ -203,6 +209,10 @@ Every AI stage is wrapped in its own try/except. A failure in classification, im
 <br>
 
 ```
+assets/
+    header-typing.svg   # animated typewriter header (SMIL, no JS/service dependency)
+    stat-cards.svg       # animated count-up stat cards (SMIL)
+
 app/
     ai/             # classifier, importance scorer, summarizer, reply generator
     api/            # FastAPI routes
