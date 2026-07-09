@@ -1,0 +1,43 @@
+<svg width="905" height="150" viewBox="0 0 905 150" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="cardbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#161b22"/><stop offset="100%" stop-color="#0d1117"/></linearGradient></defs>
+<g>
+<rect x="20" y="20" width="205" height="110" rx="10" fill="url(#cardbg)" stroke="#30363d" stroke-width="1.5"/>
+<rect x="20" y="20" width="205" height="4" rx="2" fill="#58a6ff"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/></rect>
+<text x="122.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#58a6ff" text-anchor="middle" opacity="0">0<animate attributeName="opacity" keyTimes="0;0;0.001;0.15;0.151;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="122.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#58a6ff" text-anchor="middle" opacity="0">6<animate attributeName="opacity" keyTimes="0;0.15;0.151;0.3;0.301;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="122.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#58a6ff" text-anchor="middle" opacity="0">11<animate attributeName="opacity" keyTimes="0;0.3;0.301;0.45;0.451;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="122.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#58a6ff" text-anchor="middle" opacity="0">17<animate attributeName="opacity" keyTimes="0;0.45;0.451;0.6;0.601;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="122.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#58a6ff" text-anchor="middle" opacity="0">22<animate attributeName="opacity" keyTimes="0;0.6;0.601;1" values="0;0;1;1" dur="3s" repeatCount="indefinite"/></text>
+<text x="122.5" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="11" letter-spacing="1.5" fill="#8b949e" text-anchor="middle">AI CATEGORIES</text>
+</g>
+<g>
+<rect x="240" y="20" width="205" height="110" rx="10" fill="url(#cardbg)" stroke="#30363d" stroke-width="1.5"/>
+<rect x="240" y="20" width="205" height="4" rx="2" fill="#2EA44F"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/></rect>
+<text x="342.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#2EA44F" text-anchor="middle" opacity="0">0%<animate attributeName="opacity" keyTimes="0;0;0.001;0.15;0.151;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="342.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#2EA44F" text-anchor="middle" opacity="0">25%<animate attributeName="opacity" keyTimes="0;0.15;0.151;0.3;0.301;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="342.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#2EA44F" text-anchor="middle" opacity="0">50%<animate attributeName="opacity" keyTimes="0;0.3;0.301;0.45;0.451;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="342.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#2EA44F" text-anchor="middle" opacity="0">75%<animate attributeName="opacity" keyTimes="0;0.45;0.451;0.6;0.601;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="342.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#2EA44F" text-anchor="middle" opacity="0">100%<animate attributeName="opacity" keyTimes="0;0.6;0.601;1" values="0;0;1;1" dur="3s" repeatCount="indefinite"/></text>
+<text x="342.5" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="11" letter-spacing="1.5" fill="#8b949e" text-anchor="middle">LOCAL INFERENCE</text>
+</g>
+<g>
+<rect x="460" y="20" width="205" height="110" rx="10" fill="url(#cardbg)" stroke="#30363d" stroke-width="1.5"/>
+<rect x="460" y="20" width="205" height="4" rx="2" fill="#F59E0B"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/></rect>
+<text x="562.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#F59E0B" text-anchor="middle" opacity="0">0<animate attributeName="opacity" keyTimes="0;0;0.001;0.15;0.151;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="562.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#F59E0B" text-anchor="middle" opacity="0">7<animate attributeName="opacity" keyTimes="0;0.15;0.151;0.3;0.301;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="562.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#F59E0B" text-anchor="middle" opacity="0">14<animate attributeName="opacity" keyTimes="0;0.3;0.301;0.45;0.451;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="562.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#F59E0B" text-anchor="middle" opacity="0">21<animate attributeName="opacity" keyTimes="0;0.45;0.451;0.6;0.601;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="562.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#F59E0B" text-anchor="middle" opacity="0">28<animate attributeName="opacity" keyTimes="0;0.6;0.601;1" values="0;0;1;1" dur="3s" repeatCount="indefinite"/></text>
+<text x="562.5" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="11" letter-spacing="1.5" fill="#8b949e" text-anchor="middle">REGRESSION TESTS</text>
+</g>
+<g>
+<rect x="680" y="20" width="205" height="110" rx="10" fill="url(#cardbg)" stroke="#30363d" stroke-width="1.5"/>
+<rect x="680" y="20" width="205" height="4" rx="2" fill="#7C3AED"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/></rect>
+<text x="782.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#7C3AED" text-anchor="middle" opacity="0">0<animate attributeName="opacity" keyTimes="0;0;0.001;0.15;0.151;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="782.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#7C3AED" text-anchor="middle" opacity="0">1<animate attributeName="opacity" keyTimes="0;0.15;0.151;0.3;0.301;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="782.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#7C3AED" text-anchor="middle" opacity="0">2<animate attributeName="opacity" keyTimes="0;0.3;0.301;0.45;0.451;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="782.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#7C3AED" text-anchor="middle" opacity="0">3<animate attributeName="opacity" keyTimes="0;0.45;0.451;0.6;0.601;1" values="0;0;1;1;0;0" dur="3s" repeatCount="indefinite"/></text>
+    <text x="782.5" y="78" font-family="Consolas, monospace" font-size="30" font-weight="700" fill="#7C3AED" text-anchor="middle" opacity="0">3<animate attributeName="opacity" keyTimes="0;0.6;0.601;1" values="0;0;1;1" dur="3s" repeatCount="indefinite"/></text>
+<text x="782.5" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="11" letter-spacing="1.5" fill="#8b949e" text-anchor="middle">CONFIDENCE TIERS</text>
+</g>
+</svg>
