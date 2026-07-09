@@ -3,6 +3,92 @@ ONLY a JSON object, no other text, no markdown fences.
 
 Allowed categories: {categories}
 
+CLASSIFICATION RULES
+
+1. Classify by SENDER INTENT AND RELATIONSHIP, not by the tone or urgency
+   language used in the email. Marketing emails routinely use words like
+   "urgent," "act now," "exciting," "limited time," "don't miss out," or
+   "your account needs attention" specifically to manufacture urgency. This
+   language is a marketing technique, not evidence of real urgency. If the
+   email is from a company, platform, or service trying to sell, upsell,
+   renew, or promote something, it is Promotion or Marketing regardless of
+   how urgent it sounds.
+
+2. Ask "who does this benefit if I act on it?" before assigning Urgent or
+   Important. If the answer is "the sender's business, by getting me to
+   buy/upgrade/click," it is Promotion or Marketing. If the answer is "me or
+   someone I work with, because a real deadline/decision/request is
+   attached," it can be Urgent or Important.
+
+3. Category definitions:
+   - Urgent: A real, time-sensitive action is required from a known
+     contact, client, or system — something breaks or is missed if you
+     don't respond soon (e.g. "server is down," "contract expires today,"
+     "please approve by 5pm").
+   - Important: Requires attention and a response, but not on a tight
+     clock (e.g. a colleague asking a substantive question).
+   - Client / Business: Correspondence tied to an actual client
+     relationship, deal, or business operation already in progress.
+   - Marketing: Promotional outreach from a company selling a product or
+     service, including ad platforms, SaaS tools, and B2B sales outreach
+     — even when addressed to you personally or written in a
+     conversational, non-bulk-looking style.
+   - Promotion: Bulk or templated promotional content, discounts, sales,
+     "upgrade now" messages, product announcements.
+   - Newsletter: Recurring editorial/content digest the recipient
+     subscribed to.
+   - Spam / Scam / Phishing: Unsolicited, fraudulent, or deceptive content
+     (see below for phishing signals).
+   - Invoice / Payment: Billing documents, receipts, or payment requests
+     tied to a real transaction.
+   - Finance / HR / Social / Job Opportunity / Meeting / Support Ticket /
+     GitHub / Security Alert: Use the plain-language meaning of the label.
+   - Other: Use only if nothing above reasonably fits.
+
+4. Priority guidance: Promotion, Marketing, Newsletter, Spam, Scam, and
+   Phishing should almost always be priority "Low" regardless of the
+   language used in the email — urgency wording in these categories should
+   not raise priority. Reserve "Critical" and "High" for categories like
+   Urgent, Security Alert, Client, and Business where a real deadline or
+   real risk is present.
+
+5. Legitimate service/security alerts (e.g. "unusual sign-in detected")
+   are Security Alert, not Urgent — even though they carry urgent-sounding
+   language, unless the email is also demanding you click a link to
+   "verify" or "restore" access, in which case check the Phishing signals
+   below first.
+
+6. Phishing signals: mismatched or suspicious sender domain, generic
+   greeting on a supposedly personal/account matter, links to
+   "verify"/"confirm"/"unlock" your account, urgency combined with a
+   request for credentials, payment details, or gift cards. If two or
+   more signals are present, classify as Phishing over any other category.
+
+EXAMPLES
+
+Example 1 — marketing email using urgent language (should NOT be Urgent):
+From: LinkedIn Ads <ads-noreply@linkedin.com>
+Subject: Your campaign performance update is ready — act now to grow reach
+Body: "Your LinkedIn Ads campaign is performing well! Increase your budget
+today to keep the momentum going and reach even more prospects."
+Correct classification:
+{{"category": "Marketing", "priority": "Low", "confidence": 92, "reason": "Promotional campaign-performance email from an ad platform encouraging budget increase; urgency language is a marketing device, not a real deadline."}}
+
+Example 2 — a genuinely urgent client email:
+From: Priya (Client) <priya@clientco.com>
+Subject: Need signed contract back by 5pm today
+Body: "Hi, our legal team needs the signed contract returned by 5pm today
+or we lose the vendor slot for this quarter. Can you confirm receipt?"
+Correct classification:
+{{"category": "Urgent", "priority": "Critical", "confidence": 95, "reason": "Real client deadline today with a concrete consequence if missed."}}
+
+Example 3 — routine newsletter:
+From: The Hustle <news@thehustle.co>
+Subject: Today's top business stories
+Body: A daily digest of curated business and tech news.
+Correct classification:
+{{"category": "Newsletter", "priority": "Low", "confidence": 97, "reason": "Recurring editorial digest, no action required."}}
+
 Email:
 From: {sender}
 Subject: {subject}

@@ -1,14 +1,189 @@
+# =========================================================
+# SYJ Mail Intelligence AI
+# Production .gitignore
+# =========================================================
+
+############################
+# Python
+############################
+
 __pycache__/
-*.pyc
-.env
-credentials.json
-token.json
-data/*.db
-data/*.sqlite3
+*.py[cod]
+*$py.class
+
+############################
+# Virtual Environments
+############################
+
 .venv/
 venv/
-*.log
-.DS_Store
+env/
+ENV/
+
+############################
+# Python Build
+############################
+
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+############################
+# Pytest
+############################
+
 .pytest_cache/
-htmlcov/
 .coverage
+coverage.xml
+htmlcov/
+
+############################
+# Ruff / MyPy
+############################
+
+.mypy_cache/
+.ruff_cache/
+.pyre/
+
+############################
+# IDE
+############################
+
+.vscode/
+.idea/
+
+############################
+# macOS
+############################
+
+.DS_Store
+
+############################
+# Linux
+############################
+
+*~
+
+############################
+# Windows
+############################
+
+Thumbs.db
+Desktop.ini
+
+############################
+# Environment
+############################
+
+.env
+.env.*
+!.env.example
+
+############################
+# Secrets
+############################
+
+credentials.json
+token.json
+
+############################
+# Databases
+############################
+
+*.db
+*.sqlite
+*.sqlite3
+
+data/*.db
+data/*.sqlite*
+data/*.sqlite3
+
+############################
+# Logs
+############################
+
+logs/
+*.log
+
+############################
+# Runtime
+############################
+
+*.pid
+*.seed
+*.out
+
+############################
+# Alembic
+############################
+
+migrations/__pycache__/
+
+############################
+# Node
+############################
+
+dashboard/node_modules/
+
+dashboard/.next/
+
+dashboard/out/
+
+dashboard/.vercel/
+
+############################
+# NPM
+############################
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# Coverage
+############################
+
+.coverage.*
+coverage/
+
+############################
+# Temporary
+############################
+
+tmp/
+temp/
+.cache/
+
+############################
+# Regression outputs
+############################
+
+regression_output/
+regression_reports/
+*.xlsx.bak
+
+############################
+# Local experiments
+############################
+
+scratch/
+playground/
+
+############################
+# Generated media
+############################
+
+*.mp4
+*.avi
+*.mov
+*.zip
+
+############################
+# Keep important folders
+############################
+
+!data/.gitkeep
+!logs/.gitkeep
