@@ -2,600 +2,403 @@
 
 <img src="./assets/header-typing.svg" alt="SYJ Mail Intelligence AI" width="900"/>
 
-**Local-first AI email intelligence** — classification, prioritization, summarization, and reply generation, running entirely on infrastructure you control.
+# 📬 SYJ Mail Intelligence AI
 
-![Backend](https://img.shields.io/badge/backend-feature%20complete-2EA44F?style=flat-square)
-![Frontend](https://img.shields.io/badge/frontend-beta-F59E0B?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-1F2A44?style=flat-square)
-![Platform](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Termux-7C3AED?style=flat-square)
-![Release](https://img.shields.io/badge/release-v1.0.0--beta1-0EA5E9?style=flat-square)
+### Autonomous AI Email Assistant for Gmail — Model-Agnostic · Self-Hosted · Production-Hardened
 
-Built by [Syed Ali Hasan Moosavi](#author) — [Sayanjali Nexus](#about-sayanjali-nexus)
+**Your inbox, triaged and drafted by AI that runs entirely on your own hardware — no OpenAI, no vendor lock-in, no API bill.**
+
+[![Phase 1](https://img.shields.io/badge/Phase%201-Core%20Pipeline-brightgreen?style=flat-square)](#-where-this-stands)
+[![Phase 2](https://img.shields.io/badge/Phase%202-Dashboard-brightgreen?style=flat-square)](#-where-this-stands)
+[![Phase 3](https://img.shields.io/badge/Phase%203-Production%20Hardened-brightgreen?style=flat-square)](#-where-this-stands)
+[![Phase 3.1](https://img.shields.io/badge/Phase%203.1-Reliability%20Pass-brightgreen?style=flat-square)](#-where-this-stands)
+[![Tests](https://img.shields.io/badge/tests-19%20passing-2EA44F?style=flat-square)](#-testing)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#-license)
+[![Platform](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Termux-7C3AED?style=flat-square)](#-quick-start)
+
+[Features](#-what-this-is) • [Architecture](#️-architecture) • [Quick Start](#-quick-start) • [Production Guide](#️-making-it-production-ready) • [Security](#-security) • [Author](#-behind-the-code)
 
 </div>
 
 ---
 
-## Table of contents
+## 📖 What This Is
 
-- [Why this exists](#why-this-exists)
-- [What's inside](#whats-inside)
-- [Architecture](#architecture)
-- [Safety mechanisms](#safety-mechanisms)
-- [Technology stack](#technology-stack)
-- [Project structure](#project-structure)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Running the backend](#running-the-backend)
-- [Testing](#testing)
-- [API reference](#api-reference)
-- [Deployment](#deployment)
-- [Current status](#current-status)
-- [Roadmap](#roadmap)
-- [Author](#author)
-- [License](#license)
+SYJ Mail Intelligence AI watches your Gmail inbox, **classifies** every message, **scores it for importance**, **summarizes** it, and **drafts a reply in your own writing style** — then auto-sends it only above a confidence threshold *you* control. Everything else waits for your one-tap approval.
 
----
+It's **model-agnostic by design** — there's no OpenAI dependency anywhere in the stack. It runs entirely against local, open-weight models through [Ollama](https://ollama.com) (DeepSeek V3/R1, Qwen 3, Qwen Coder, Mistral, Llama 3), and swapping providers is a config change, not a code change.
 
-## Why this exists
-
-Most "AI inbox" tools route email through a third-party cloud model. This doesn't. Classification, importance scoring, summarization, and reply drafting all run locally through Ollama — the content of your email never leaves your own infrastructure. On top of that local reasoning pipeline sits a REST API and a dashboard: Gmail in, structured intelligence and drafted replies out, gated by a deterministic approval workflow that decides what gets auto-sent, drafted for review, or escalated to a human.
-
-The backend and dashboard run the same way on a Windows machine, a Linux server, a Mac, or an Android phone in Termux — the AI layer is model-and-runtime driven, not tied to any one OS.
+This isn't a weekend script — it's shipped through four real phases (core pipeline → dashboard → production hardening → an audit-driven reliability pass), each tested against live infrastructure rather than assumed to work.
 
 <div align="center">
-
 <img src="./assets/stat-cards.svg" alt="Project stats" width="880"/>
-
 </div>
 
+> 🎬 **Demo:** drop a short screen recording at `assets/demo.gif` (1280×720, <10s, showing an email arriving → getting classified → a reply drafted) and reference it here as `![SYJ Mail Intelligence AI demo](./assets/demo.gif)`. Skipped in this README rather than linking a placeholder that doesn't exist yet.
+
 ---
 
-## What's inside
+## ✨ Key Features
 
-<details open>
-<summary><strong>AI email classification</strong></summary>
+- 🧠 **AI email classification** — 22 business-relevant categories (`Urgent`, `Client`, `Invoice`, `Security Alert`, `Phishing`, `Meeting`, and more), tuned to avoid the classic false-urgency trap of marketing copy
+- 📊 **Importance scoring** — 1–100 score with plain-English reasoning and automatic deadline detection
+- ✍️ **Style-aware reply generation** — drafts in *your* writing style, with echo/paraphrase detection that forces a stricter regeneration before ever falling back to a safe template
+- ✅ **Confidence-gated approval workflow** — auto-send, Gmail draft, or manual review, decided in plain Python (not just prompted), so a model can't talk its way past your thresholds
+- 📬 **Full Gmail integration** — polling, thread detection, draft creation, sending, archiving, read-state sync
+- 🔔 **Telegram notifications** — with Markdown-escaping so special characters never silently break a message
+- 🖥️ **Next.js dashboard** — inbox, approval queue, contact intelligence, analytics, live prompt editor, and system logs, JWT-authenticated end to end
+- 🔐 **Production-grade security** — API-key auth on every route, a server-side proxy so the key never touches the browser, rate limiting, and Postgres isolated on an internal network
+- 🧩 **Truly model-agnostic** — swap `LLM_MODEL` in `.env` to run DeepSeek, Qwen, Mistral, or Llama — zero code changes
+- 📱 **Runs anywhere** — Windows, Linux, macOS, and natively in Termux on Android
+
+---
+
+## 🧭 Where This Stands
+
+| Phase | Status | What Shipped |
+|---|:---:|---|
+| **Phase 1** | ✅ | Core pipeline — Gmail polling, classification, importance scoring, Telegram notifications, style-learned reply drafting, the 95%/80% approval workflow. Termux-runnable, SQLite by default. |
+| **Phase 2** | ✅ | Next.js dashboard — Inbox, Important, Approval Queue, Notifications, Analytics, Contacts, Prompt Editor, Logs, Settings. |
+| **Phase 3** | ✅ | Production hardening — API-key auth, server-side dashboard proxy, rate limiting, Postgres + Alembic, Docker Compose + Nginx/HTTPS, systemd path, GitHub Actions CI, pytest suite. |
+| **Phase 3.1** | ✅ | Audit-driven reliability pass — see below. |
+
+<details>
+<summary><strong>🔍 What Phase 3.1 actually fixed</strong> (click to expand)</summary>
 <br>
 
-Each email is sorted into one of 22 business-relevant categories (`Urgent`, `Important`, `Client`, `Finance`, `Invoice`, `HR`, `Support Ticket`, `Security Alert`, `Phishing`, `Meeting`, and others), using a prompt tuned to avoid the most common classifier failure mode: mistaking urgency-flavored marketing language for genuine urgency.
+- Gmail is **no longer a hard dependency to start** — the API and dashboard run fully with zero Gmail credentials
+- The poller **reconnects with capped backoff** instead of crashing outright
+- A single `GET /ready` endpoint reports real DB + Gmail readiness
+- The AI provider is a **true singleton**, reusing one persistent HTTP connection instead of one per call
+- Prompt edits from the dashboard **take effect without a restart**
+- A failing AI call at any stage **degrades to a safe default** and flags the email `needs_manual_review`
+- Telegram notifications **escape Markdown special characters** instead of silently failing
+
+Covered by `tests/test_pipeline_resilience.py` and `tests/test_provider_singleton.py`.
 </details>
 
 <details>
-<summary><strong>Importance scoring</strong></summary>
+<summary><strong>🚧 Not yet built</strong> (by design, not by accident)</summary>
 <br>
 
-A 1–100 importance score with plain-English reasoning and automatic deadline detection, normalized so malformed model output (stray `"null"` strings, non-English text) never reaches the database.
-</details>
-
-<details>
-<summary><strong>AI summarization</strong></summary>
-<br>
-
-One-line and detailed summaries, extracted action items, requested tasks, and detected deadlines — generated for every email that isn't auto-archived.
-</details>
-
-<details>
-<summary><strong>AI reply generation</strong></summary>
-<br>
-
-- Writing-style-aware draft generation via a local LLM
-- Per-draft confidence scoring
-- Echo prevention: a similarity check compares each generated reply against the source email; a paraphrased or echoed response triggers one regeneration with a stricter prompt before falling back to a safe, professional template
-- Every path terminates in a safe, non-empty reply
-</details>
-
-<details>
-<summary><strong>Approval workflow</strong></summary>
-<br>
-
-Three configurable confidence thresholds route every drafted reply:
-
-- **Auto-send** — high-confidence replies go out immediately
-- **Gmail draft** — mid-confidence replies are created as Gmail drafts pending one-click approval
-- **Manual review** — lower-confidence replies stay in the dashboard for editing
-</details>
-
-<details>
-<summary><strong>Gmail integration</strong></summary>
-<br>
-
-Polling, thread detection, draft creation, auto-reply sending, archiving, and read-state management via the Gmail API.
-</details>
-
-<details>
-<summary><strong>Notifications</strong></summary>
-<br>
-
-Telegram is live today. The notification layer is channel-agnostic and built to extend to Slack, Discord, Microsoft Teams, email, and generic webhooks.
-</details>
-
-<details>
-<summary><strong>Dashboard (beta)</strong></summary>
-<br>
-
-A Next.js 14 executive dashboard now sits on the FastAPI backend, authenticated via JWT with HTTP-only cookies and protected middleware:
-
-- Inbox with live polling, priority badges, and category labels
-- Email detail view with AI summaries, reasoning, and suggested replies
-- Manual review and draft approval queues
-- Contact intelligence, analytics, notification history, prompt editor, settings, and system logs
-</details>
-
-<details>
-<summary><strong>REST API</strong></summary>
-<br>
-
-A FastAPI backend exposing emails, drafts, contacts, notifications, analytics, logs, settings, and live prompt management — the same API the dashboard consumes.
+- RAG over past sent emails
+- Redis/Celery for higher-throughput async processing
+- Multi-Gmail-account support
+- WhatsApp/Slack/Discord notification channels
+- A live Model Manager UI (today: `.env` + restart)
 </details>
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
-```
-                     Gmail Inbox
-                          │
-                          ▼
-                   Gmail Poller
-                          │
-                          ▼
-                  process_email()
-                          │
-        ┌─────────────────┼─────────────────┐
-        ▼                 ▼                 ▼
- Classification      Importance       Summarization
-        │                 │                 │
-        └────────────┬────┴─────────────────┘
-                      ▼
-              SQLite Database
-                      │
-                      ▼
-             Reply Generation
-           (similarity-checked,
-          regenerate-or-fallback)
-                      │
-                      ▼
-         Approval Decision Engine
-                      │
-      ┌───────────────┼───────────────┐
-      ▼               ▼               ▼
- Auto Send      Gmail Draft     Manual Review
-                      │
-                      ▼
-             Notification System
-                      │
-                      ▼
-            FastAPI REST Backend
-                      │
-                      ▼
-      Next.js Dashboard (JWT-authenticated)
+```mermaid
+flowchart TD
+    A[📥 Gmail API<br/>OAuth2 Poller] -->|new message| B[⚙️ Pipeline Orchestrator]
+
+    B --> C[🏷️ Classifier<br/>category · confidence · reason]
+    B --> D[📊 Importance Scorer<br/>1-100 · sender rep · deadlines]
+    B --> E[📝 Summarizer<br/>1-line · detailed · action items]
+
+    C --> F[✍️ Reply Generator<br/>style profile + tone selection]
+    D --> F
+    E --> F
+
+    F --> G{Confidence Router}
+    G -->|"≥ 95%"| H[🚀 Auto-Send<br/>via Gmail API]
+    G -->|"80–94%"| I[📋 Gmail Draft<br/>+ Telegram approval request]
+    G -->|"< 80%"| J[🗂️ Manual Review<br/>dashboard only]
+
+    H --> K[🔔 Telegram Notification]
+    I --> K
+    J --> K
+
+    K --> L[(🗄️ Postgres / SQLite)]
+    L --> M[🌐 FastAPI REST Backend]
+    M --> N[🖥️ Next.js Dashboard<br/>JWT-authenticated]
+
+    style A fill:#4285F4,color:#fff
+    style H fill:#2EA44F,color:#fff
+    style I fill:#F59E0B,color:#fff
+    style J fill:#EF4444,color:#fff
+    style N fill:#7C3AED,color:#fff
 ```
 
-Every AI stage is wrapped in its own try/except. A failure in classification, importance scoring, summarization, or reply generation never drops the email or crashes the pipeline — it falls back to a safe default, flags the email for manual review, and logs the specific failure reason.
+**Every AI stage runs in its own try/except.** A failure in classification, scoring, summarization, or reply generation never drops the email — it falls back to a safe default, flags the message for manual review, and logs the exact failure reason.
+
+### Request flow (dashboard → backend)
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Dashboard as Next.js Server Proxy
+    participant API as FastAPI Backend
+    participant DB as Postgres / SQLite
+
+    Browser->>Dashboard: Request (no API key attached)
+    Dashboard->>API: Forwarded request + X-API-Key (server-side only)
+    API->>API: Verify key
+    API->>DB: Query
+    DB-->>API: Result
+    API-->>Dashboard: JSON response
+    Dashboard-->>Browser: JSON response
+```
+
+The API key **never reaches client-side JavaScript** — see [Security](#-security) for why this matters.
 
 ---
 
-## Safety mechanisms
-
-| Mechanism | What it prevents |
-|---|---|
-| Reply similarity detection | The model echoing or paraphrasing the incoming email instead of responding to it |
-| Regenerate-then-fallback | One retry with a stricter prompt before falling back to a safe template |
-| Deadline/null normalization | Inconsistent model output corrupting stored data |
-| English-only enforcement | The model drifting into another language mid-response |
-| `needs_manual_review` flagging | AI failures going unnoticed — every failure is logged and surfaced |
-| Provider fallback | A single model outage taking down the pipeline (Qwen 14B → Qwen 7B) |
-| JWT + HTTP-only cookies | Session hijacking and token exposure to client-side scripts |
-| Server-side API proxy | Direct client exposure of the backend |
-
----
-
-## Technology stack
+## 🧰 Technology Stack
 
 | Layer | Technology |
 |---|---|
-| Backend | Python 3.13+, FastAPI, SQLAlchemy, SQLite, Alembic, Uvicorn |
-| AI | Ollama, Qwen2.5 14B (primary), Qwen2.5 7B (fallback) |
-| Frontend | Next.js 14.2.35, React 18.3.1, TypeScript 5.6, Tailwind CSS, Lucide Icons |
-| Auth | JWT (HTTP-only cookies), Google OAuth (Gmail) |
-| Notifications | Telegram Bot API |
+| **Backend** | Python 3.11+, FastAPI, SQLAlchemy, Alembic, Uvicorn |
+| **AI / LLM** | Ollama — DeepSeek V3/R1, Qwen 2.5/3, Qwen Coder, Mistral, Llama 3 (fully swappable) |
+| **Frontend** | Next.js 14+, React, TypeScript, Tailwind CSS |
+| **Database** | SQLite (dev) → PostgreSQL + Alembic (production) |
+| **Auth** | JWT (HTTP-only cookies) + API-key auth, Google OAuth2 (Gmail) |
+| **Notifications** | Telegram Bot API |
+| **Deployment** | Docker Compose + Nginx/HTTPS, or systemd (non-Docker), GitHub Actions CI |
 
 ---
 
-## Project structure
+## 📋 Requirements
 
-<details>
-<summary>Click to expand</summary>
-<br>
-
-```
-assets/
-    header-typing.svg   # animated typewriter header (SMIL, no JS/service dependency)
-    stat-cards.svg       # animated count-up stat cards (SMIL)
-
-app/
-    ai/             # classifier, importance scorer, summarizer, reply generator
-    api/            # FastAPI routes
-    core/           # database, logger, models, time utils
-    gmail/          # Gmail client, polling
-    notifications/  # Telegram + notification abstraction
-    workflows/      # process_email() pipeline orchestration
-
-config/
-    prompts/        # classify.txt, importance.txt, reply.txt — hot-reloaded, no restart needed
-    config.py       # thresholds, categories, auto-handling rules
-
-dashboard/          # Next.js frontend (JWT auth, executive UI)
-tests/
-scripts/
-deploy/
-data/
-migrations/
-```
-</details>
-
----
-
-## Requirements
-
-| Requirement | Version / notes |
+| Requirement | Version / Notes |
 |---|---|
-| Python | 3.11 or newer (3.13 recommended) |
-| Node.js | 18 or newer (for the dashboard) |
-| Ollama | Latest — used for local LLM inference |
-| Git | Any recent version |
-| RAM | 8 GB minimum; 16 GB+ recommended for the 14B model |
-| Disk space | ~10 GB free for models (Qwen2.5 14B + 7B) |
+| Python | 3.11+ |
+| Node.js | 18+ (for the dashboard) |
+| Ollama | Latest — local LLM inference |
+| RAM | 8 GB minimum · 16 GB+ recommended for 14B-class models |
+| Disk | ~10 GB free for models |
 | Gmail account | With API access enabled via Google Cloud Console |
 
-The AI models run through Ollama regardless of OS, so inference behavior is identical across platforms — only the setup steps differ.
-
 ---
 
-## Installation
+## 🚀 Quick Start
 
-Pick the section for your OS. All platforms end up running the same backend and dashboard.
+*Local development — SQLite, no auth required.*
 
-<details>
-<summary><strong>🪟 Windows</strong></summary>
-<br>
+**1. Clone and set up the backend**
 
-**Requirements:** Windows 10/11, Python 3.11+, Node.js 18+, Git for Windows.
-
-```powershell
-# Install Python, Node.js, and Git if not already installed (via winget)
-winget install Python.Python.3.13
-winget install OpenJS.NodeJS.LTS
-winget install Git.Git
-```
-
-```powershell
-git clone <YOUR_REPOSITORY_URL>
+```bash
+git clone https://github.com/SHalimoosavi/syj-mail-intelligence-ai.git
 cd syj-mail-intelligence-ai
-```
-
-```powershell
-python -m venv .venv
-.venv\Scripts\activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env
 ```
 
-Install [Ollama for Windows](https://ollama.com/download/windows), then pull the models:
+**2. Add Gmail credentials**
 
-```powershell
-ollama pull qwen2.5:14b
-ollama pull qwen2.5:7b
-```
+Go to Google Cloud Console → **APIs & Services → Credentials → Create OAuth client ID → Desktop app**, download the file, and place it in the project root as `credentials.json`.
 
-Copy `.env.example` to `.env` and configure as described in [Environment variables](#environment-variables).
-
-> **Note:** Native `next build` works fine on Windows. If you hit native-module issues with certain Python packages, running the backend inside **WSL2** (Ubuntu) is a solid fallback — treat it as the Linux path below.
-</details>
-
-<details>
-<summary><strong>🐧 Linux</strong></summary>
-<br>
-
-**Requirements:** Ubuntu 22.04+/Debian 12+/Fedora 39+ (or equivalent), Python 3.11+, Node.js 18+.
+**3. Run the one-time OAuth flow, then start the backend**
 
 ```bash
-# Debian / Ubuntu
-sudo apt update && sudo apt install -y python3 python3-venv python3-pip \
-  git build-essential nodejs npm sqlite3
+python -m app.gmail.auth    # one-time OAuth2 flow
+python main.py              # starts the poller + API on :8000
 ```
 
-```bash
-# Fedora
-sudo dnf install -y python3 python3-pip git gcc gcc-c++ make nodejs npm sqlite
-```
-
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd syj-mail-intelligence-ai
-```
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-Install [Ollama for Linux](https://ollama.com/download/linux), then pull the models:
-
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
-ollama pull qwen2.5:14b
-ollama pull qwen2.5:7b
-```
-
-Copy `.env.example` to `.env` and configure as described in [Environment variables](#environment-variables). This is also the reference environment for Docker, Railway, and other Linux-based deployment targets.
-</details>
-
-<details>
-<summary><strong>🍎 macOS</strong></summary>
-<br>
-
-**Requirements:** macOS 13+, Python 3.11+, Node.js 18+, Homebrew.
-
-```bash
-brew install python@3.13 node git sqlite
-```
-
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd syj-mail-intelligence-ai
-```
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-Install [Ollama for macOS](https://ollama.com/download/mac), then pull the models:
-
-```bash
-ollama pull qwen2.5:14b
-ollama pull qwen2.5:7b
-```
-
-Copy `.env.example` to `.env` and configure as described in [Environment variables](#environment-variables). On Apple Silicon, Ollama uses the GPU/Metal backend automatically — no extra configuration needed.
-</details>
-
-<details>
-<summary><strong>📱 Android (Termux)</strong></summary>
-<br>
-
-**Requirements:** Termux (F-Droid build, not the Play Store version), Android 8+, ~4 GB free storage.
-
-Backend development is native to Termux — no emulator or desktop required.
-
-```bash
-pkg update && pkg upgrade
-pkg install python git clang rust sqlite nodejs build-essential
-```
-
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd syj-mail-intelligence-ai
-```
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements-termux.txt
-```
-
-Install Ollama for your platform (via a Linux distro under Termux, e.g. proot-distro, or point `OLLAMA_HOST` at a remote instance), then pull the models:
-
-```bash
-ollama pull qwen2.5:14b
-ollama pull qwen2.5:7b
-```
-
-Copy `.env.example` to `.env` and configure as described in [Environment variables](#environment-variables).
-
-> **Known limitation:** local production builds (`next build`) are not currently supported on Android/Termux — the required SWC binary isn't available for `android/arm64`. `npx tsc --noEmit` and `next dev` work fine in Termux; run `next build` on Vercel, Linux, GitHub Actions, Railway, Docker, or WSL2.
-</details>
-
-### Gmail credentials
-
-On any platform: place `credentials.json` and `token.json` in the project root (see Google Cloud Console for OAuth setup).
-
-### Environment variables
-
-Copy `.env.example` to `.env` and configure:
-
-<details>
-<summary>Show full <code>.env</code> reference</summary>
-<br>
-
-```env
-ENVIRONMENT=development
-DATABASE_URL=sqlite:///./data/syj_mail.db
-
-LLM_PROVIDER=ollama
-OLLAMA_HOST=http://localhost:11434
-LLM_MODEL=qwen2.5:14b
-LLM_FALLBACK_MODEL=qwen2.5:7b
-LLM_TIMEOUT_SECONDS=60
-
-AUTO_SEND_THRESHOLD=95
-APPROVAL_THRESHOLD=80
-IMPORTANCE_NOTIFY_THRESHOLD=70
-
-GMAIL_CREDENTIALS_FILE=credentials.json
-GMAIL_TOKEN_FILE=token.json
-GMAIL_POLL_INTERVAL_SECONDS=60
-GMAIL_USER_EMAIL=me
-
-TELEGRAM_BOT_TOKEN=
-TELEGRAM_CHAT_ID=
-
-JWT_SECRET=
-JWT_EXPIRY_MINUTES=60
-
-API_HOST=0.0.0.0
-API_PORT=8000
-API_KEY=
-CORS_ALLOW_ORIGINS=http://localhost:3000
-RATE_LIMIT_PER_MINUTE=30
-```
-
-> `API_KEY` and `JWT_SECRET` are required in production — the app refuses to start with `ENVIRONMENT=production` and either unset, since this backend can send email and expose dashboard sessions on your behalf.
-</details>
-
-### Dashboard (all platforms)
+**4. Start the dashboard** (in a second terminal)
 
 ```bash
 cd dashboard
 npm install
-npm run dev
+cp .env.local.example .env.local
+npm run dev                 # dashboard on :3000
 ```
 
-`npm run build` works natively on Windows, Linux, and macOS. On Termux, use the remote-build workaround noted above.
-
----
-
-## Running the backend
+**5. Verify it's running**
 
 ```bash
-python main.py
-# or
-uvicorn app.api.main:app --reload
+curl http://localhost:8000/health
 ```
 
-Health check: `GET /health`
-
----
-
-## Testing
-
-```bash
-pytest                                        # full suite
-pytest tests/test_pipeline_resilience.py      # a specific test
-```
-
-### Regression suite
-
-A 28-case regression suite validates classification accuracy, importance scoring, echo detection, similarity protection, and approval routing against representative real-world email types (critical outages, invoices, support tickets, GitHub notifications, marketing, personal mail, spam/phishing):
-
-```bash
-python run_regression.py
-```
-
-Results are written to a spreadsheet — classification accuracy, priority accuracy, reply quality, echo rate, and fallback rate are tracked against explicit targets before any release is considered production-ready.
-
----
-
-## API reference
+You should get a `200 OK`. Open `http://localhost:3000` for the dashboard.
 
 <details>
-<summary>Click to expand endpoint list</summary>
+<summary><strong>📱 Running in Termux (Android)</strong></summary>
 <br>
 
+```bash
+pkg update && pkg upgrade -y
+pkg install python git nodejs -y
+bash scripts/setup_termux.sh
 ```
-GET     /health
-GET     /ready
 
-POST    /auth/login
-POST    /auth/logout
+Then follow the same steps as Quick Start above. If your phone can't comfortably run a 7B+ model, point `OLLAMA_HOST` at a LAN or Tailscale machine — most people do this, since Android backgrounding also makes Termux unsuitable for true 24/7 operation. See [Making It Production-Ready](#️-making-it-production-ready) for a proper deployment path.
 
-GET     /emails
-GET     /emails/{id}
-GET     /emails/important
-
-GET     /drafts
-GET     /drafts/pending
-POST    /drafts/{id}/approve
-POST    /drafts/{id}/reject
-
-GET     /notifications
-GET     /contacts
-GET     /logs
-
-GET     /analytics/summary
-
-GET     /settings
-
-GET     /prompts
-GET     /prompts/{name}
-PUT     /prompts/{name}
-```
+> **Note:** `next build` isn't currently supported on Android/Termux (the SWC binary isn't available for `android/arm64`). `next dev` and `npx tsc --noEmit` both work fine — run `next build` on Vercel, GitHub Actions, Docker, or WSL2.
 </details>
 
 ---
 
-## Deployment
+## 🛠️ Making It Production-Ready
 
-| Component | Recommended |
+A step-by-step checklist, in the order you'd actually run it.
+
+### 1️⃣ Generate an API key and enable production mode
+
+```bash
+python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Put the output in `.env` as `API_KEY=...` and set `ENVIRONMENT=production`. Without this, **the backend refuses to start** — since it can send email on your behalf, it must never be reachable unauthenticated. Add the same key to `dashboard/.env.local` as `BACKEND_API_KEY`; the browser never sees it, only the dashboard's own server-side proxy does.
+
+### 2️⃣ Move to Postgres
+
+```bash
+# create a database, then:
+DATABASE_URL=postgresql://user:pass@host/dbname
+alembic upgrade head
+```
+
+Run `alembic upgrade head` on every deploy after a model change, and `alembic revision --autogenerate -m "describe the change"` to create the next migration.
+
+### 3️⃣ Deploy — pick one
+
+| Option | Best for |
 |---|---|
-| Backend | Railway, VPS, Docker, Ubuntu Server |
-| Dashboard | Vercel |
-| AI inference | Local/self-hosted Ollama |
-| Database | SQLite (dev) → PostgreSQL (planned) |
+| 🐳 **Docker Compose** (`deploy/README.md`) | Postgres + backend + dashboard + Nginx in one `docker compose up -d`, HTTPS via Certbot |
+| ⚙️ **systemd, no Docker** (`deploy/README-systemd.md`) | Same result, managed as three systemd units |
+
+Both put Nginx as the public entry point; neither exposes FastAPI or Postgres directly to the internet.
+
+### 4️⃣ Set up CI
+
+`.github/workflows/ci.yml` runs on every push: backend tests against a real Postgres service container, an Alembic migration check, and a full dashboard `npm run build`. Nothing merges if any of those fail.
+
+### 5️⃣ Configure log retention
+
+`scripts/prune_logs.py` prunes `logs` table rows older than N days (default 30). Both deploy paths install it as a scheduled job.
 
 ---
 
-## Current status
+## 🔒 Security
 
-**Backend** — feature complete, regression tested, prompt-hardened (echo prevention, false-urgency correction, English enforcement), approval workflow, Gmail integration, REST API.
-
-**Dashboard** — beta. JWT authentication, protected routing, inbox, email detail view, manual review queue, draft approval, notifications, contacts, analytics, prompt management, settings, and logs are implemented and TypeScript-verified. No automated frontend test suite yet; end-to-end testing and performance tuning are planned ahead of v1.0.0.
-
-**Current release:** `v1.0.0-beta1`
-
----
-
-## Roadmap
-
-| Version | Focus |
+| Mechanism | What It Prevents |
 |---|---|
-| `v1.0.0` | Production deployment, end-to-end testing, performance tuning, security review |
-| `v1.1.0` | Reply editor, retry workflow, analytics enhancements |
-| `v1.2.0` | Multi-user support and RBAC |
-| `v2.0.0` | Multi-tenant SaaS release |
+| `X-API-Key` required on every route except `/health` | Unauthenticated access to a service that can send email on your behalf |
+| Server-side dashboard proxy (`BACKEND_API_KEY`, never `NEXT_PUBLIC_`) | The API key ever reaching client-side JavaScript |
+| CORS locked to `CORS_ALLOW_ORIGINS` | Unauthorized browser-based clients |
+| Rate limiting on approve/reject routes (`slowapi`) | Abuse of the approval endpoints |
+| Path-traversal-safe `/prompts/{name}` routes | Arbitrary filesystem access via prompt names |
+| Postgres on an internal Docker network | Direct external access to the database |
+| OAuth2-only Gmail auth, tokens never committed | Plaintext credential exposure |
+
+**Recommended:** `chmod 600 .env token.json credentials.json` on any host you deploy to.
 
 ---
 
-## Author
+## 🩺 Health vs. Readiness
 
-**Syed Ali Hasan Moosavi**
-Founder & Managing Director, Sayanjali Nexus Private Limited — Hyderabad, Telangana, India
+| Endpoint | Auth | Purpose |
+|---|:---:|---|
+| `GET /health` | None | Liveness only — "is the process running." |
+| `GET /ready` | None | Readiness — runs a real DB query and reports Gmail's connection state. Returns `503` if the database is unreachable. |
 
-Full-stack builder and AI automation specialist working with SMEs, hospitals, logistics firms, and Gulf-based enterprises. Fluent in English, Urdu, Hindi, Telugu, and Arabic, with work experience across India, Qatar, and Saudi Arabia. Certified in AI Fundamentals (IBM SkillsBuild) and Claude 101 / AI Fluency (Anthropic).
-
-Every part of this project has been built and tested across Termux, Linux, and Windows environments.
-
-### About Sayanjali Nexus
-
-SYJ Mail Intelligence AI is one product in a wider ecosystem under Sayanjali Nexus, including:
-
-- **NexusRank AI** — SEO/AEO/GEO ranking intelligence
-- **Sayanjali OSINT** — unified CLI geolocation intelligence tool
-- **SYJ Scholar AI** — Akhbari Shia hadith research platform with multilingual support
-- **SYJ ONE** — unified project/brand hub
-- **AI Zara Web Widget** — embeddable conversational AI widget
-- **SYJ GitHub Optimizer** — GitHub profile and repo automation (Node.js / Octokit)
-- **Sayanjali Cyberdeck** — terminal-style security dashboard (Python/Textual + React)
-
-Client and family-business work under the same builder includes systems for M K Enterprises, Ace Livestock Farms, Alison Holidays, and Moosavi Farming.
+Use `/ready` for Docker/systemd health checks and load balancer probes; use `/health` where you want a lightweight "process alive" check with no DB round-trip.
 
 ---
 
-## License
+## 🧪 Testing
 
-MIT License — see `LICENSE`.
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+pytest tests/ -v
+```
+
+**19 tests**, covering:
+
+- ✅ Approval-threshold logic (auto-send vs. approval-queue vs. draft-only, including exact boundaries)
+- ✅ API-key enforcement end-to-end
+- ✅ AI-provider singleton behavior
+- ✅ Per-stage AI failure isolation in the pipeline
+- ✅ Telegram Markdown escaping
+
+Runs against SQLite locally and against real Postgres in CI.
 
 ---
 
-## Contact
+## ⚙️ Configuration — Swapping Models
 
-For collaboration or freelance systems work, reach out through the Sayanjali Nexus channels linked from the author's portfolio.
+```env
+LLM_PROVIDER=ollama
+LLM_MODEL=deepseek-r1:14b        # or qwen2.5:14b, qwen2.5-coder:14b, mistral, llama3.1
+LLM_FALLBACK_MODEL=qwen2.5:7b    # used if the primary model errors or times out
+```
+
+No OpenAI dependency exists anywhere in the codebase — every model runs locally through Ollama.
+
+---
+
+## ✅ Approval Workflow
+
+| Confidence | Action |
+|:---:|---|
+| **≥ 95%** | Auto-send reply via Gmail API |
+| **80–94%** | Draft created, Telegram approval request sent, waits for your review |
+| **< 80%** | Draft only, saved to the database, never sent, never touches Gmail |
+
+Enforced in plain Python (`app/workflows/pipeline.py::_handle_reply_confidence`) — not just prompted — so a model misreporting its own confidence can't bypass it.
+
+---
+
+## 🗺️ Roadmap
+
+1. 🔎 RAG over past sent emails (`sqlite-vec` or Chroma, Ollama embeddings — no OpenAI)
+2. ⚡ Redis + Celery for real async/concurrent processing at higher volume
+3. 📧 Multi-Gmail-account support
+4. 💬 WhatsApp / Slack / Discord / Desktop notification channels
+5. 🎛️ Live Model Manager in the dashboard (swap `LLM_MODEL` without a restart)
+
+---
+
+## 👤 Behind the Code
+
+<div align="center">
+
+### Syed Ali Hasan Moosavi
+**Founder & Managing Director — Sayanjali Nexus Private Limited**
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SHalimoosavi)
+[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://shalimoosavi.github.io/moosavi/)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/SHAliMoosavi)
+
+</div>
+
+A solo, full-stack technical founder building across AI/SaaS, cybersecurity, blockchain, and business automation — end to end, from backend architecture to deployment to the docs you're reading right now. Core stack: **Python, FastAPI, Next.js, React, TypeScript, PostgreSQL, Docker.**
+
+This project reflects a broader building philosophy: no phase is marked "done" until it's been run against real infrastructure — a live Postgres instance, a live Docker-equivalent stack, an actual `main.py` run with credentials deliberately removed. If this README says something is tested, it's because it was tested.
+
+---
+
+## 🧰 Other Tools & Projects by SYJ
+
+| Project | What It Is |
+|---|---|
+| **[SYJ GST Invoice Reconciliation](https://github.com/SHalimoosavi/SYJ-GST-Reconciliation)** | Production-ready GST invoice reconciliation engine — duplicate detection, GSTIN matching, multi-sheet Excel reporting. 137 tests, ~90% coverage. |
+| **SYJ NexusIntel AI** | Multi-tenant enterprise SaaS — CRM, revenue intelligence, RBAC, subscriptions, audit logging. |
+| **SYJ Media Tools** | Social media downloader — GitHub Pages frontend, FastAPI + yt-dlp backend. |
+| **Sayanjali OSINT — Sentinel Intelligence** | Threat intelligence aggregation from VirusTotal, Shodan, AbuseIPDB, AlienVault OTX. |
+| **NexusRank AI** | AI-powered SEO/GEO SaaS — async FastAPI backend, multi-provider AI integration, Stripe billing. |
+| **Real Estate CRM SaaS** | Multi-tenant AI-powered CRM with WhatsApp automation. |
+| **SYJ MOMENTUM** | Unified B2B automation — WhatsApp, LinkedIn outreach, review monitoring, GST compliance. |
+
+Full, up-to-date list: [github.com/SHalimoosavi?tab=repositories](https://github.com/SHalimoosavi?tab=repositories)
+
+---
+
+## 📄 License
+
+MIT License — see [`LICENSE`](./LICENSE).
 
 <div align="center">
 
 ---
+
+**Model-agnostic. Self-hosted. Actually tested against real infrastructure.**
 
 Built to run anywhere. Shipped like a product.
 
